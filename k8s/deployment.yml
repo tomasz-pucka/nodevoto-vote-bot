@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vote-bot-deployment
+  namespace: nodevoto
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vote-bot-pod
+  template:
+    metadata:
+      labels:
+        app: vote-bot-pod
+      annotations:
+        linkerd.io/inject: enabled
+    spec:
+      containers:
+        - image: nodevoto-vote-bot:1.0.0
+          imagePullPolicy: Never
+          name: vote-bot-container
+          env:
+            - name: WEB_HOST
+              value: web-service.nodevoto:80
